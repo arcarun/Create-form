@@ -7,8 +7,8 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 8px; /* Further reduced margin */
-            background-color: #0A3A2A; /* Dark green background */
+            margin: 8px;
+            background-color: #0A3A2A;
             color: #e0e0e0;
             font-size: 0.95rem;
         }
@@ -16,21 +16,21 @@
             max-width: 400px;
             margin: auto;
             background-color: #1e2632;
-            padding: 15px; /* Reduced padding */
+            padding: 15px;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
             width: 90%;
             box-sizing: border-box;
         }
         h1 {
-            color: #FFFF00; /* Changed: Yellow color for New Task heading */
+            color: #FFFF00; /* Yellow color for New Task heading */
             text-align: center;
-            margin-bottom: 15px; /* Reduced margin */
+            margin-bottom: 15px;
             font-size: 1.5rem;
         }
         label {
             display: block;
-            margin-bottom: 5px; /* Reduced margin */
+            margin-bottom: 5px;
             font-weight: bold;
             color: #cccccc;
             font-size: 0.9rem;
@@ -39,9 +39,9 @@
         input[type="number"],
         textarea,
         select {
-            width: calc(100% - 14px); /* Adjusted width for new padding */
-            padding: 8px; /* Reduced padding */
-            margin-bottom: 12px; /* Reduced margin */
+            width: calc(100% - 14px);
+            padding: 8px;
+            margin-bottom: 12px;
             border: 1px solid #4a5a70;
             border-radius: 6px;
             background-color: #3e4d65;
@@ -60,20 +60,20 @@
         }
         textarea {
             resize: vertical;
-            min-height: 50px; /* Reduced min-height */
-            rows: 3; /* Changed: Default rows reduced */
+            min-height: 50px;
+            rows: 3;
         }
         button {
             background-color: #6fb9f0;
             color: white;
-            padding: 10px 18px; /* Reduced padding */
+            padding: 10px 18px;
             border: none;
             border-radius: 6px;
             cursor: pointer;
             font-size: 1rem;
             width: 100%;
             transition: background-color 0.3s ease;
-            margin-top: 8px; /* Reduced margin */
+            margin-top: 8px;
             font-family: Arial, sans-serif;
         }
         button:hover {
@@ -83,9 +83,31 @@
             text-align: center;
             font-size: 0.8rem;
             font-weight: normal;
-            margin-bottom: 12px; /* Reduced margin */
+            margin-bottom: 12px;
             color: #a0d468;
             font-family: Arial, sans-serif;
+        }
+        /* Styles for Autocomplete List */
+        .autocomplete-suggestions {
+            border: 1px solid #4a5a70;
+            background-color: #3e4d65;
+            max-height: 150px;
+            overflow-y: auto;
+            position: absolute; /* Important for positioning */
+            z-index: 99; /* To make sure it's above other elements */
+            width: calc(100% - 30px); /* Adjust width to match input */
+            border-radius: 0 0 6px 6px;
+        }
+        .autocomplete-suggestion {
+            padding: 8px;
+            cursor: pointer;
+            color: #e0e0e0;
+            font-size: 0.9rem;
+            font-family: Arial, sans-serif;
+        }
+        .autocomplete-suggestion:hover {
+            background-color: #6fb9f0;
+            color: white;
         }
     </style>
 </head>
@@ -95,10 +117,12 @@
         <div id="snDisplay">SN: Auto Generated</div>
         <form id="taskForm">
             <label for="company">Company:</label>
-            <input type="text" id="company" name="company" required>
+            <input type="text" id="company" name="company" required list="companySuggestions">
+            <datalist id="companySuggestions"></datalist>
 
             <label for="user">User:</label>
-            <input type="text" id="user" name="user" required>
+            <input type="text" id="user" name="user" required list="userSuggestions">
+            <datalist id="userSuggestions"></datalist>
 
             <label for="mob">Mobile:</label>
             <input type="text" id="mob" name="mob" required pattern="[0-9]{10,15}" title="Please enter a valid mobile number">
@@ -118,7 +142,8 @@
             </select>
 
             <label for="task">Task Detail:</label>
-            <textarea id="task" name="task" rows="3" required></textarea> <button type="submit">Submit</button>
+            <textarea id="task" name="task" rows="3" required></textarea>
+            <button type="submit">Submit</button>
         </form>
     </div>
 
@@ -126,9 +151,44 @@
     <script>
         const form = document.getElementById('taskForm');
         const snDisplay = document.getElementById('snDisplay');
+        const companyInput = document.getElementById('company');
+        const userInput = document.getElementById('user');
+        const companySuggestions = document.getElementById('companySuggestions');
+        const userSuggestions = document.getElementById('userSuggestions');
+
+        // Function to load unique items from local storage
+        function loadSuggestions(key) {
+            const data = localStorage.getItem(key);
+            return data ? Array.from(new Set(JSON.parse(data))) : [];
+        }
+
+        // Function to save a new item to local storage
+        function saveSuggestion(key, item) {
+            if (!item || item.trim() === '') return;
+            let suggestions = loadSuggestions(key);
+            if (!suggestions.includes(item.trim())) {
+                suggestions.push(item.trim());
+                localStorage.setItem(key, JSON.stringify(suggestions));
+            }
+        }
+
+        // Function to update datalist options
+        function updateDatalist(inputElement, datalistElement, key) {
+            const suggestions = loadSuggestions(key);
+            datalistElement.innerHTML = ''; // Clear previous options
+            suggestions.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item;
+                datalistElement.appendChild(option);
+            });
+        }
 
         function sendDataToBot(data) {
             if (window.Telegram && window.Telegram.WebApp) {
+                // Save Company and User to local storage before sending
+                saveSuggestion('companies', data.company);
+                saveSuggestion('users', data.user);
+
                 window.Telegram.WebApp.sendData(JSON.stringify(data));
                 window.Telegram.WebApp.close();
             } else {
@@ -141,8 +201,8 @@
             event.preventDefault();
 
             const formData = {
-                company: document.getElementById('company').value,
-                user: document.getElementById('user').value,
+                company: companyInput.value,
+                user: userInput.value,
                 mob: document.getElementById('mob').value,
                 location: document.getElementById('location').value,
                 bill: document.getElementById('bill').value,
@@ -157,6 +217,10 @@
             window.Telegram.WebApp.ready();
             window.Telegram.WebApp.setHeaderColor('#1e2632');
             window.Telegram.WebApp.setBackgroundColor('#0A3A2A');
+
+            // Load and update suggestions on app start
+            updateDatalist(companyInput, companySuggestions, 'companies');
+            updateDatalist(userInput, userSuggestions, 'users');
         } else {
             snDisplay.textContent = "SN: (Telegram Web App error)";
             console.error('Telegram WebApp object not available.');
