@@ -6,8 +6,8 @@
     <title>New Task Form</title>
     <style>
         body {
-            font-family: Arial, sans-serif; /* Changed: Arial font */
-            margin: 10px;
+            font-family: Arial, sans-serif;
+            margin: 8px; /* Further reduced margin */
             background-color: #0A3A2A; /* Dark green background */
             color: #e0e0e0;
             font-size: 0.95rem;
@@ -16,21 +16,21 @@
             max-width: 400px;
             margin: auto;
             background-color: #1e2632;
-            padding: 20px;
+            padding: 15px; /* Reduced padding */
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
             width: 90%;
             box-sizing: border-box;
         }
         h1 {
-            color: #6fb9f0;
+            color: #FFFF00; /* Changed: Yellow color for New Task heading */
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px; /* Reduced margin */
             font-size: 1.5rem;
         }
         label {
             display: block;
-            margin-bottom: 6px;
+            margin-bottom: 5px; /* Reduced margin */
             font-weight: bold;
             color: #cccccc;
             font-size: 0.9rem;
@@ -39,16 +39,16 @@
         input[type="number"],
         textarea,
         select {
-            width: calc(100% - 16px);
-            padding: 10px;
-            margin-bottom: 15px;
+            width: calc(100% - 14px); /* Adjusted width for new padding */
+            padding: 8px; /* Reduced padding */
+            margin-bottom: 12px; /* Reduced margin */
             border: 1px solid #4a5a70;
             border-radius: 6px;
             background-color: #3e4d65;
             color: #e0e0e0;
             box-sizing: border-box;
             font-size: 0.9rem;
-            font-family: Arial, sans-serif; /* Changed: Arial font for inputs */
+            font-family: Arial, sans-serif;
         }
         input[type="text"]:focus,
         input[type="number"]:focus,
@@ -60,20 +60,21 @@
         }
         textarea {
             resize: vertical;
-            min-height: 60px;
+            min-height: 50px; /* Reduced min-height */
+            rows: 3; /* Changed: Default rows reduced */
         }
         button {
             background-color: #6fb9f0;
             color: white;
-            padding: 12px 20px;
+            padding: 10px 18px; /* Reduced padding */
             border: none;
             border-radius: 6px;
             cursor: pointer;
             font-size: 1rem;
             width: 100%;
             transition: background-color 0.3s ease;
-            margin-top: 10px;
-            font-family: Arial, sans-serif; /* Changed: Arial font for button */
+            margin-top: 8px; /* Reduced margin */
+            font-family: Arial, sans-serif;
         }
         button:hover {
             background-color: #559dd6;
@@ -82,9 +83,9 @@
             text-align: center;
             font-size: 0.8rem;
             font-weight: normal;
-            margin-bottom: 15px;
+            margin-bottom: 12px; /* Reduced margin */
             color: #a0d468;
-            font-family: Arial, sans-serif; /* Changed: Arial font for SN display */
+            font-family: Arial, sans-serif;
         }
     </style>
 </head>
@@ -117,8 +118,7 @@
             </select>
 
             <label for="task">Task Detail:</label>
-            <textarea id="task" name="task" rows="4" required></textarea>
-            <button type="submit">Submit</button>
+            <textarea id="task" name="task" rows="3" required></textarea> <button type="submit">Submit</button>
         </form>
     </div>
 
