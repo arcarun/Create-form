@@ -3,240 +3,351 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>New Task Form</title>
+    <title>A R Computers - Task Entry Form</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 8px;
-            background-color: #0A3A2A;
-            color: #e0e0e0;
-            font-size: 0.95rem;
+            background-color: #cde6cd; /* Light green background */
+            margin: 0;
+            padding: 20px;
         }
         .container {
-            max-width: 400px;
-            margin: auto;
-            background-color: #1e2632;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-            width: 90%;
-            box-sizing: border-box;
+            max-width: 500px;
+            margin: 0 auto;
         }
-        h1 {
-            color: #FFFF00;
-            text-align: center;
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
             margin-bottom: 15px;
-            font-size: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-        label {
+        .card label {
             display: block;
-            margin-bottom: 5px;
             font-weight: bold;
-            color: #cccccc;
-            font-size: 0.9rem;
+            margin-bottom: 10px;
+            color: #333;
         }
-        input[type="text"],
-        input[type="number"],
-        textarea,
-        select {
-            width: calc(100% - 14px);
-            padding: 8px;
-            margin-bottom: 12px;
-            border: 1px solid #4a5a70;
-            border-radius: 6px;
-            background-color: #3e4d65;
-            color: #e0e0e0;
-            box-sizing: border-box;
-            font-size: 0.9rem;
-            font-family: Arial, sans-serif;
+        .required {
+            color: red;
         }
-        input[type="text"]:focus,
-        input[type="number"]:focus,
-        textarea:focus,
-        select:focus {
-            border-color: #6fb9f0;
-            outline: none;
-            box-shadow: 0 0 0 2px rgba(111, 185, 240, 0.3);
-        }
-        textarea {
-            resize: vertical;
-            min-height: 50px;
-            rows: 3;
-        }
-        button {
-            background-color: #6fb9f0;
-            color: white;
-            padding: 10px 18px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1rem;
+        input[type="text"], textarea {
             width: 100%;
-            transition: background-color 0.3s ease;
-            margin-top: 8px;
-            font-family: Arial, sans-serif;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            outline: none;
+            padding: 8px 0;
+            font-size: 15px;
+            font-family: inherit;
+            box-sizing: border-box;
         }
-        button:hover {
-            background-color: #559dd6;
+        input[type="text"]:focus, textarea:focus {
+            border-bottom: 2px solid #00796b;
         }
-        #snDisplay {
-            text-align: center;
-            font-size: 0.8rem;
-            font-weight: normal;
-            margin-bottom: 12px;
-            color: #a0d468;
-            font-family: Arial, sans-serif;
+        input[type="text"]::placeholder, textarea::placeholder {
+            color: #aaa;
         }
-        /* Styles for Autocomplete List */
-        .autocomplete-suggestions {
-            border: 1px solid #4a5a70;
-            background-color: #3e4d65;
-            max-height: 150px;
-            overflow-y: auto;
-            position: absolute;
-            z-index: 99;
-            width: calc(100% - 30px);
-            border-radius: 0 0 6px 6px;
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 10px;
         }
-        .autocomplete-suggestion {
-            padding: 8px;
+        .radio-label {
+            display: flex;
+            align-items: center;
+            font-weight: normal !important;
             cursor: pointer;
-            color: #e0e0e0;
-            font-size: 0.9rem;
-            font-family: Arial, sans-serif;
         }
-        .autocomplete-suggestion:hover {
-            background-color: #6fb9f0;
+        .radio-label input {
+            margin-right: 10px;
+            transform: scale(1.2);
+            accent-color: #00796b;
+        }
+        .action-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .btn-submit {
+            background-color: #00796b;
             color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-clear {
+            background: none;
+            color: #00796b;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .autocomplete-container {
+            position: relative;
+        }
+        .suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 0 0 4px 4px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .suggestion-item {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+        .suggestion-item:hover {
+            background-color: #f1f8f1;
+        }
+        .suggestion-item b {
+            color: #00796b;
+        }
+        /* Popup Styles */
+        #popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        .popup-content {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            width: 80%;
+            max-width: 350px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .popup-content h3 {
+            color: #00796b;
+            margin-top: 0;
+            font-size: 20px;
+        }
+        .btn-recreate {
+            background-color: #00796b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>New Task</h1>
-        <div id="snDisplay">SN: Loading...</div>
-        <form id="taskForm">
-            <label for="company">Company:</label>
-            <input type="text" id="company" name="company" required list="companySuggestions">
-            <datalist id="companySuggestions"></datalist>
 
-            <label for="user">User:</label>
-            <input type="text" id="user" name="user" required list="userSuggestions">
-            <datalist id="userSuggestions"></datalist>
-
-            <label for="mob">Mobile:</label>
-            <input type="text" id="mob" name="mob" required pattern="[0-9]{10,15}" title="Please enter a valid mobile number">
-
-            <label for="location">Location:</label>
-            <input type="text" id="location" name="location" required>
-
-            <label for="bill">Bill:</label>
-            <input type="text" id="bill" name="bill">
-
-            <label for="type">Type:</label>
-            <select id="type" name="type" required>
-                <option value="Call Basic">Call Basic</option>
-                <option value="AMC">AMC</option>
-                <option value="Rentals">Rentals</option>
-                <option value="Vendor">Vendor</option>
-            </select>
-
-            <label for="task">Task Detail:</label>
-            <textarea id="task" name="task" rows="3" required></textarea>
-            <button type="submit">Submit</button>
-        </form>
-    </div>
-
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script>
-        const form = document.getElementById('taskForm');
-        const snDisplay = document.getElementById('snDisplay');
-        const companyInput = document.getElementById('company');
-        const userInput = document.getElementById('user');
-        const companySuggestions = document.getElementById('companySuggestions');
-        const userSuggestions = document.getElementById('userSuggestions');
+<div class="container">
+    <form id="taskForm">
         
-        // Function to load unique items from local storage
-        function loadSuggestions(key) {
-            const data = localStorage.getItem(key);
-            return data ? Array.from(new Set(JSON.parse(data))) : [];
+        <div class="card autocomplete-container" id="company-container">
+            <label>Company</label>
+            <input type="text" id="company" name="company" placeholder="Your answer" autocomplete="off">
+            <div id="company-suggestions" class="suggestions"></div>
+        </div>
+
+        <div class="card autocomplete-container" id="user-container">
+            <label>User</label>
+            <input type="text" id="user" name="user" placeholder="Your answer" autocomplete="off">
+            <div id="user-suggestions" class="suggestions"></div>
+        </div>
+
+        <div class="card">
+            <label>Mobile</label>
+            <input type="text" id="mobile" name="mobile" placeholder="Your answer">
+        </div>
+
+        <div class="card">
+            <label>Location <span class="required">*</span></label>
+            <input type="text" id="location" name="location" placeholder="Your answer" required>
+        </div>
+
+        <div class="card">
+            <label>Bill</label>
+            <input type="text" id="bill" name="bill" placeholder="Your answer">
+        </div>
+
+        <div class="card">
+            <label>Author <span class="required">*</span></label>
+            <div class="radio-group">
+                <label class="radio-label"><input type="radio" name="author" value="Simran" required> Simran</label>
+                <label class="radio-label"><input type="radio" name="author" value="Zaid"> Zaid</label>
+                <label class="radio-label"><input type="radio" name="author" value="Farheen"> Farheen</label>
+                <label class="radio-label"><input type="radio" name="author" value="Irfan"> Irfan</label>
+            </div>
+        </div>
+
+        <div class="card">
+            <label>Type <span class="required">*</span></label>
+            <div class="radio-group">
+                <label class="radio-label"><input type="radio" name="type" value="AMC" required> AMC</label>
+                <label class="radio-label"><input type="radio" name="type" value="Call Basic"> Call Basic</label>
+                <label class="radio-label"><input type="radio" name="type" value="Rentals"> Rentals</label>
+                <label class="radio-label"><input type="radio" name="type" value="Vendor"> Vendor</label>
+            </div>
+        </div>
+
+        <div class="card">
+            <label>Problem <span class="required">*</span></label>
+            <textarea id="problem" name="problem" placeholder="Your answer" rows="2" required></textarea>
+        </div>
+
+        <div class="action-container">
+            <button type="submit" id="submitBtn" class="btn-submit">Submit</button>
+            <button type="button" class="btn-clear" onclick="document.getElementById('taskForm').reset()">Clear form</button>
+        </div>
+    </form>
+</div>
+
+<div id="popup">
+    <div class="popup-content">
+        <h3>✅ Task Submitted Successfully</h3>
+        <button class="btn-recreate" onclick="recreateForm()">Re-create</button>
+    </div>
+</div>
+
+<script>
+    // URLs
+    const GET_URL = "https://script.google.com/macros/s/AKfycbzs_oXLBpvnBfyh6YsiMgdQyV0rMLkfGVsN80q1xOSKLzRPD3LzakkMQxReC7XbdxULtg/exec";
+    const POST_URL = "https://script.google.com/macros/s/AKfycbwZiVdKPlWGY3m_4xuTj3JCAKqaMOx7uU0BLUeZPgqpIzapln6cyDbmbORiAAYtOPLr/exec";
+
+    let db = [];
+
+    // Fetch Database on Load
+    fetch(GET_URL)
+        .then(response => response.json())
+        .then(data => { db = data; })
+        .catch(err => console.error("Database loading error:", err));
+
+    const companyInput = document.getElementById("company");
+    const userInput = document.getElementById("user");
+    const mobileInput = document.getElementById("mobile");
+    const locationInput = document.getElementById("location");
+    
+    const companySugg = document.getElementById("company-suggestions");
+    const userSugg = document.getElementById("user-suggestions");
+
+    // Suggestion Logic
+    function handleInput(e, type) {
+        const query = e.target.value.toLowerCase();
+        const suggBox = type === 'company' ? companySugg : userSugg;
+        
+        suggBox.innerHTML = "";
+        
+        if (!query) {
+            suggBox.style.display = "none";
+            return;
         }
 
-        // Function to save a new item to local storage
-        function saveSuggestion(key, item) {
-            if (!item || item.trim() === '') return;
-            let suggestions = loadSuggestions(key);
-            if (!suggestions.includes(item.trim())) {
-                suggestions.push(item.trim());
-                localStorage.setItem(key, JSON.stringify(suggestions));
-            }
-        }
-
-        // Function to update datalist options
-        function updateDatalist(inputElement, datalistElement, key) {
-            const suggestions = loadSuggestions(key);
-            datalistElement.innerHTML = ''; // Clear previous options
-            suggestions.forEach(item => {
-                const option = document.createElement('option');
-                option.value = item;
-                datalistElement.appendChild(option);
-            });
-        }
-
-        function sendDataToBot(data) {
-            try {
-                if (window.Telegram && window.Telegram.WebApp) {
-                    saveSuggestion('companies', data.company);
-                    saveSuggestion('users', data.user);
-                    
-                    window.Telegram.WebApp.sendData(JSON.stringify(data));
-                    window.Telegram.WebApp.close();
-                } else {
-                    alert('Telegram WebApp is not available. Cannot send data.');
-                    console.error('Telegram WebApp object not found.');
-                }
-            } catch (error) {
-                alert('An error occurred while sending data. Check the console for details.');
-                console.error("Error in sendDataToBot:", error);
-            }
-        }
-
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            const formData = {
-                company: companyInput.value,
-                user: userInput.value,
-                mob: document.getElementById('mob').value,
-                location: document.getElementById('location').value,
-                bill: document.getElementById('bill').value,
-                type: document.getElementById('type').value,
-                task: document.getElementById('task').value,
-            };
-
-            sendDataToBot(formData);
+        const matches = db.filter(item => {
+            const val = type === 'company' ? (item.Company || "") : (item.User || "");
+            return val.toLowerCase().includes(query);
         });
 
-        if (window.Telegram && window.Telegram.WebApp) {
-            window.Telegram.WebApp.ready();
-            window.Telegram.WebApp.setHeaderColor('#1e2632');
-            window.Telegram.WebApp.setBackgroundColor('#0A3A2A');
-
-            let currentSN = localStorage.getItem('sn_counter');
-            if (currentSN === null || isNaN(parseInt(currentSN))) {
-                currentSN = 0;
-                localStorage.setItem('sn_counter', currentSN);
-            }
-            const nextSN = parseInt(currentSN) + 1;
-            snDisplay.textContent = `SN: ${String(nextSN).padStart(2, '0')}`;
-
-            // Load and update suggestions on app start
-            updateDatalist(companyInput, companySuggestions, 'companies');
-            updateDatalist(userInput, userSuggestions, 'users');
-        } else {
-            snDisplay.textContent = "SN: (Telegram Web App not found)";
-            console.error('Telegram WebApp object not available.');
+        if (matches.length === 0) {
+            suggBox.style.display = "none";
+            return;
         }
-    </script>
+
+        matches.forEach(match => {
+            const div = document.createElement("div");
+            div.className = "suggestion-item";
+            div.innerHTML = `<b>${match.Company}</b> - ${match.User} <br><small>${match.Address}</small>`;
+            div.onclick = () => {
+                companyInput.value = match.Company || "";
+                userInput.value = match.User || "";
+                mobileInput.value = match.Mobile || "";
+                locationInput.value = match.Address || "";
+                suggBox.style.display = "none";
+            };
+            suggBox.appendChild(div);
+        });
+        
+        suggBox.style.display = "block";
+    }
+
+    companyInput.addEventListener("input", (e) => handleInput(e, 'company'));
+    userInput.addEventListener("input", (e) => handleInput(e, 'user'));
+
+    // Hide suggestions when clicking outside
+    document.addEventListener("click", (e) => {
+        if (!e.target.closest("#company-container")) companySugg.style.display = "none";
+        if (!e.target.closest("#user-container")) userSugg.style.display = "none";
+    });
+
+    // Form Submit Logic
+    const form = document.getElementById("taskForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const popup = document.getElementById("popup");
+
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        
+        submitBtn.innerText = "Submitting...";
+        submitBtn.disabled = true;
+
+        const payload = {
+            Company: form.company.value,
+            User: form.user.value,
+            Mobile: form.mobile.value,
+            Location: form.location.value,
+            Bill: form.bill.value,
+            Author: form.querySelector('input[name="author"]:checked').value,
+            Type: form.querySelector('input[name="type"]:checked').value,
+            Problem: form.problem.value
+        };
+
+        fetch(POST_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+                "Content-Type": "text/plain"
+            },
+            body: JSON.stringify(payload)
+        }).then(() => {
+            popup.style.display = "flex";
+            submitBtn.innerText = "Submit";
+            submitBtn.disabled = false;
+        }).catch((err) => {
+            alert("Error submitting task. Please check your connection.");
+            submitBtn.innerText = "Submit";
+            submitBtn.disabled = false;
+        });
+    });
+
+    // Re-create Button Logic
+    function recreateForm() {
+        form.reset();
+        popup.style.display = "none";
+        window.scrollTo(0, 0);
+    }
+</script>
+
 </body>
 </html>
