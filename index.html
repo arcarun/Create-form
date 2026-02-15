@@ -1,116 +1,249 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Task Entry Form</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A R Computers - Task Entry Form</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #2b302c; color: white; margin: 0; padding: 10px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .form-container { background-color: #1b2e21; width: 100%; max-width: 450px; padding: 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); box-sizing: border-box; }
+        h2 { margin-top: 0; margin-bottom: 15px; text-align: center; border-bottom: 1px solid #4caf50; padding-bottom: 10px; font-size: 18px; color: #ffffff; }
+        .form-group { margin-bottom: 12px; position: relative; }
+        label { display: block; font-weight: bold; margin-bottom: 4px; color: #b9d6c3; font-size: 12px; }
+        .required { color: #ff5252; }
+        input[type="text"], textarea { width: 100%; padding: 8px; border: 1px solid #4caf50; border-radius: 4px; font-size: 14px; box-sizing: border-box; background-color: #2b302c; color: white; }
+        input[type="text"]:focus, textarea:focus { border-color: #81c784; outline: none; background-color: #363d38; }
+        
+        .radio-group { display: flex; flex-direction: row; flex-wrap: wrap; gap: 15px; margin-top: 2px; background-color: #25382b; padding: 8px; border-radius: 4px; border: 1px solid #3d5e45; }
+        .radio-label { display: flex; align-items: center; font-weight: normal; font-size: 12px; cursor: pointer; margin: 0; color: white; }
+        .radio-label input { margin-right: 4px; cursor: pointer; accent-color: #4caf50; }
 
-<style>
-body{
-background:#071f17;
-font-family:Arial;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-}
+        .action-container { display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 10px; border-top: 1px solid #3d5e45; }
+        .btn-submit { background-color: #4caf50; color: white; border: none; padding: 10px 25px; font-size: 14px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 60%; }
+        .btn-submit:disabled { background-color: #81c784; cursor: not-allowed; }
+        .btn-clear { background: none; color: #ff5252; border: none; font-size: 12px; cursor: pointer; font-weight: bold; width: 35%; text-align: right; }
 
-.card{
-width:420px;
-padding:25px;
-border-radius:12px;
-background:linear-gradient(180deg,#0f3d2a,#0b2219);
-box-shadow:0 0 20px rgba(0,255,120,.15);
-color:#9cffc7;
-}
+        .suggestions { position: absolute; top: 100%; left: 0; right: 0; background: #2b302c; border: 1px solid #4caf50; border-top: none; border-radius: 0 0 4px 4px; max-height: 150px; overflow-y: auto; z-index: 9999; display: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .suggestion-item { padding: 8px; cursor: pointer; border-bottom: 1px solid #3d5e45; font-size: 12px; color: white; }
+        .suggestion-item:last-child { border-bottom: none; }
+        .suggestion-item:hover { background-color: #363d38; }
+        .suggestion-item b { color: #81c784; }
 
-h2{ text-align:center; }
-
-input,textarea{
-width:100%;
-padding:10px;
-margin:8px 0;
-border-radius:6px;
-border:1px solid #1e6b47;
-background:#0c231a;
-color:#fff;
-}
-
-button{
-width:100%;
-padding:12px;
-border:none;
-border-radius:6px;
-background:#3dbb63;
-color:white;
-font-size:16px;
-margin-top:12px;
-cursor:pointer;
-}
-</style>
+        #popup { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; z-index: 10000; }
+        .popup-content { background: #1b2e21; padding: 25px; border-radius: 8px; text-align: center; width: 85%; max-width: 350px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); border: 1px solid #4caf50; }
+        .popup-content h3 { color: #4caf50; margin-top: 0; font-size: 18px; margin-bottom: 10px; }
+        .error-message { color: #ff5252; font-size: 12px; margin-bottom: 15px; word-wrap: break-word; text-align: left; background: #2b302c; padding: 8px; border-radius: 4px; border: 1px solid #ff5252; display: none; }
+        .btn-recreate { background-color: #4caf50; color: white; border: none; padding: 10px 20px; font-size: 14px; border-radius: 4px; cursor: pointer; width: 100%; font-weight: bold; }
+    </style>
 </head>
-
 <body>
 
-<div class="card">
-<h2>Task Entry Form</h2>
+<div class="form-container">
+    <h2>Task Entry Form</h2>
+    <form id="taskForm">
+        
+        <div class="form-group" id="company-container">
+            <label>Company</label>
+            <input type="text" id="company" autocomplete="off" placeholder="Enter company name">
+            <div id="company-suggestions" class="suggestions"></div>
+        </div>
 
-<form id="taskForm">
+        <div class="form-group" id="user-container">
+            <label>User</label>
+            <input type="text" id="user" autocomplete="off" placeholder="Enter user name">
+            <div id="user-suggestions" class="suggestions"></div>
+        </div>
 
-<input type="text" placeholder="Company" required>
-<input type="text" placeholder="User" required>
-<input type="text" placeholder="Mobile" required>
-<input type="text" placeholder="Location" required>
-<input type="text" placeholder="Bill">
+        <div class="form-group">
+            <label>Mobile</label>
+            <input type="text" id="mobile" placeholder="Enter mobile number">
+        </div>
 
-<label>Author</label>
-<br>
-<input type="radio" name="author" value="Simran" required> Simran
-<input type="radio" name="author" value="Zaid"> Zaid
-<input type="radio" name="author" value="Farheen"> Farheen
-<input type="radio" name="author" value="Irfan"> Irfan
+        <div class="form-group">
+            <label>Location <span class="required">*</span></label>
+            <input type="text" id="location" placeholder="Enter complete address" required>
+        </div>
 
-<br><br>
-<label>Type</label>
-<br>
-<input type="radio" name="type" value="AMC" required> AMC
-<input type="radio" name="type" value="Call Basic"> Call Basic
-<input type="radio" name="type" value="Rentals"> Rentals
-<input type="radio" name="type" value="Vendor"> Vendor
+        <div class="form-group">
+            <label>Bill</label>
+            <input type="text" id="bill" placeholder="Enter bill details">
+        </div>
 
-<textarea placeholder="Problem" required></textarea>
+        <div class="form-group">
+            <label>Author <span class="required">*</span></label>
+            <div class="radio-group">
+                <label class="radio-label"><input type="radio" name="author" value="Simran" required> Simran</label>
+                <label class="radio-label"><input type="radio" name="author" value="Zaid"> Zaid</label>
+                <label class="radio-label"><input type="radio" name="author" value="Farheen"> Farheen</label>
+                <label class="radio-label"><input type="radio" name="author" value="Irfan"> Irfan</label>
+            </div>
+        </div>
 
-<button type="submit">Submit</button>
+        <div class="form-group">
+            <label>Type <span class="required">*</span></label>
+            <div class="radio-group">
+                <label class="radio-label"><input type="radio" name="type" value="AMC" required> AMC</label>
+                <label class="radio-label"><input type="radio" name="type" value="Call Basic"> Call Basic</label>
+                <label class="radio-label"><input type="radio" name="type" value="Rentals"> Rentals</label>
+                <label class="radio-label"><input type="radio" name="type" value="Vendor"> Vendor</label>
+            </div>
+        </div>
 
-</form>
+        <div class="form-group">
+            <label>Problem <span class="required">*</span></label>
+            <textarea id="problem" placeholder="Describe the issue..." rows="2" required></textarea>
+        </div>
+
+        <div class="action-container">
+            <button type="submit" id="submitBtn" class="btn-submit">Submit</button>
+            <button type="button" class="btn-clear" onclick="document.getElementById('taskForm').reset()">Clear form</button>
+        </div>
+    </form>
+</div>
+
+<div id="popup">
+    <div class="popup-content">
+        <h3 id="popup-title">☑ Task Submitted Successfully</h3>
+        <div id="error-details" class="error-message"></div>
+        <button id="recreate-btn" class="btn-recreate" onclick="recreateForm()">Re-create</button>
+    </div>
 </div>
 
 <script>
-const scriptURL="https://script.google.com/macros/s/AKfycbxqzk-DGjwf6nMT_wNGgQhQWO1h1exYHhJPiXoAldRvYh3QppH059B5VPHTJSsJo9Xh/exec";
+    const GET_URL = "https://script.google.com/macros/s/AKfycbzm3zAriWZAlFVGNbe86TlKyy2F-ShCrpbDZD2nDdL1sMkzUbusJTUPBoWSfsnzSzMN/exec";
+    const POST_URL = "https://script.google.com/macros/s/AKfycbx0bDvCZ7u49pn-0fvoafOCPdzi2l9mSX9Mv0gbSH7WTiu1eHCe4GMbgbS1nSUyleMpkw/exec";
 
-document.getElementById("taskForm").addEventListener("submit", async function(e){
-e.preventDefault();
+    let db = [];
 
-const inputs=document.querySelectorAll("input[type='text']");
-const author=document.querySelector("input[name='author']:checked");
-const type=document.querySelector("input[name='type']:checked");
-const problem=document.querySelector("textarea");
+    fetch(GET_URL + "?t=" + new Date().getTime())
+        .then(response => response.json())
+        .then(data => { 
+            db = data; 
+        })
+        .catch(err => console.error("Database loading error:", err));
 
-const data={
-company:inputs[0].value,
-user:inputs[1].value,
-mobile:inputs[2].value,
-location:inputs[3].value,
-bill:inputs[4].value,
-author:author.value,
-type:type.value,
-problem:problem.value
-};
+    const companyInput = document.getElementById("company");
+    const userInput = document.getElementById("user");
+    const mobileInput = document.getElementById("mobile");
+    const locationInput = document.getElementById("location");
+    
+    const companySugg = document.getElementById("company-suggestions");
+    const userSugg = document.getElementById("user-suggestions");
 
-await fetch(scriptURL,{method:"POST",body:JSON.stringify(data)});
+    function handleInput(e, type) {
+        const query = e.target.value.toLowerCase();
+        const suggBox = type === 'company' ? companySugg : userSugg;
+        
+        suggBox.innerHTML = "";
+        
+        if (!query) {
+            suggBox.style.display = "none";
+            return;
+        }
 
-alert("Submitted Successfully");
-document.getElementById("taskForm").reset();
-});
+        const matches = db.filter(item => {
+            const val = type === 'company' ? (item.Company || "") : (item.User || "");
+            return val.toLowerCase().includes(query);
+        });
+
+        if (matches.length === 0) {
+            suggBox.style.display = "none";
+            return;
+        }
+
+        matches.forEach(match => {
+            const div = document.createElement("div");
+            div.className = "suggestion-item";
+            div.innerHTML = `<b>${match.Company}</b> - ${match.User} <br><small style="color:#b9d6c3;">${match.Address}</small>`;
+            div.onclick = () => {
+                companyInput.value = match.Company || "";
+                userInput.value = match.User || "";
+                mobileInput.value = match.Mobile || "";
+                locationInput.value = match.Address || "";
+                suggBox.style.display = "none";
+            };
+            suggBox.appendChild(div);
+        });
+        
+        suggBox.style.display = "block";
+    }
+
+    companyInput.addEventListener("input", (e) => handleInput(e, 'company'));
+    userInput.addEventListener("input", (e) => handleInput(e, 'user'));
+
+    document.addEventListener("click", (e) => {
+        if (!e.target.closest("#company-container")) companySugg.style.display = "none";
+        if (!e.target.closest("#user-container")) userSugg.style.display = "none";
+    });
+
+    const form = document.getElementById("taskForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const popup = document.getElementById("popup");
+    const popupTitle = document.getElementById("popup-title");
+    const errorDetails = document.getElementById("error-details");
+    const recreateBtn = document.getElementById("recreate-btn");
+
+    function showPopup(isSuccess, errorText = "") {
+        popup.style.display = "flex";
+        if (isSuccess) {
+            popupTitle.innerHTML = "☑ Task Submitted Successfully";
+            popupTitle.style.color = "#4caf50";
+            popup.querySelector('.popup-content').style.borderColor = "#4caf50";
+            errorDetails.style.display = "none";
+            recreateBtn.innerText = "Re-create";
+            recreateBtn.style.backgroundColor = "#4caf50";
+        } else {
+            popupTitle.innerHTML = "⚠ Submission Failed";
+            popupTitle.style.color = "#ff5252";
+            popup.querySelector('.popup-content').style.borderColor = "#ff5252";
+            errorDetails.style.display = "block";
+            errorDetails.innerText = errorText;
+            recreateBtn.innerText = "Close & Try Again";
+            recreateBtn.style.backgroundColor = "#ff5252";
+        }
+    }
+
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        
+        submitBtn.innerText = "Submitting...";
+        submitBtn.disabled = true;
+
+        const payload = {
+            company: form.company.value,
+            user: form.user.value,
+            mobile: form.mobile.value,
+            location: form.location.value,
+            bill: form.bill.value,
+            author: form.querySelector('input[name="author"]:checked').value,
+            type: form.querySelector('input[name="type"]:checked').value,
+            problem: form.problem.value
+        };
+
+        fetch(POST_URL, {
+            method: "POST",
+            mode: "no-cors",
+            body: JSON.stringify(payload)
+        })
+        .then(() => {
+            showPopup(true);
+            submitBtn.innerText = "Submit";
+            submitBtn.disabled = false;
+        })
+        .catch(err => {
+            showPopup(false, err.toString());
+            submitBtn.innerText = "Submit";
+            submitBtn.disabled = false;
+        });
+    });
+
+    function recreateForm() {
+        if (popupTitle.innerHTML.includes("Successfully")) {
+            form.reset();
+            window.scrollTo(0, 0);
+        }
+        popup.style.display = "none";
+    }
 </script>
 
 </body>
