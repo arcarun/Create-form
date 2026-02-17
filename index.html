@@ -137,13 +137,13 @@
         
         suggBox.innerHTML = "";
         
-        if (!query) {
+        if (query.length < 3) {
             suggBox.style.display = "none";
             return;
         }
 
         const matches = db.filter(item => {
-            const val = type === 'company' ? (item.Company || "") : (item.User || "");
+            const val = type === 'company' ? (item.company || "") : (item.user || "");
             return val.toLowerCase().includes(query);
         });
 
@@ -155,12 +155,12 @@
         matches.forEach(match => {
             const div = document.createElement("div");
             div.className = "suggestion-item";
-            div.innerHTML = `<b>${match.Company}</b> - ${match.User} <br><small style="color:#b9d6c3;">${match.Address}</small>`;
+            div.innerHTML = `<b>${match.company}</b> - ${match.user} <br><small style="color:#b9d6c3;">${match.location}</small>`;
             div.onclick = () => {
-                companyInput.value = match.Company || "";
-                userInput.value = match.User || "";
-                mobileInput.value = match.Mobile || "";
-                locationInput.value = match.Address || "";
+                companyInput.value = match.company || "";
+                userInput.value = match.user || "";
+                mobileInput.value = match.mobile || "";
+                locationInput.value = match.location || "";
                 suggBox.style.display = "none";
             };
             suggBox.appendChild(div);
