@@ -8,7 +8,6 @@
         label { display: block; font-weight: bold; }
         input, select, textarea { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
         button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
-        #message { margin-top: 15px; padding: 10px; display: none; }
     </style>
 </head>
 <body>
@@ -28,7 +27,7 @@
 
         <div class="form-group">
             <label>Company Name</label>
-            <input type="text" id="company" list="clientList" oninput="autoFillData(this.value)" autocomplete="off" required>
+            <input type="text" id="company" list="clientList" oninput="searchCompany(this.value)" autocomplete="off" required>
             <datalist id="clientList"></datalist>
         </div>
 
@@ -66,26 +65,40 @@
             <textarea id="problem" rows="4" required></textarea>
         </div>
 
-        <button type="submit">Submit Task</button>
+        <button type="submit" id="submitBtn">Submit Task</button>
     </form>
 
-    <div id="message"></div>
-
     <script>
-        // URLs for the two different sheets
-        const SHEET1_SUBMIT_URL = 'https://script.google.com/macros/s/AKfycbxqzK-DGjwf6nMT_wNGgQhQWO1h1exYHhJPixOAldRvYh3QppH059B5VPHTJssJo9Xh/exec'; 
-        const SHEET2_DATABASE_URL = 'https://script.google.com/macros/s/AKfycbzOfFw8TFevVsed2p0NCzlafvfwidLksSj1frmb9G8GOY2SKDwrluHT_f7og52NJxosw/exec'; 
+        // REPLACE THESE TWO URLS WITH YOUR ACTUAL WEB APP URLS
+        const SHEET1_SUBMIT_URL = 'INSERT_YOUR_SHEET_1_WEB_APP_URL_HERE'; 
+        const SHEET2_DATABASE_URL = 'INSERT_YOUR_SHEET_2_WEB_APP_URL_HERE'; 
 
-        let globalClientData = [];
+        let fetchedClients = [];
 
-        // 1. Fetch data from Sheet 2 (Customer database) on load
-        window.onload = function() {
-            fetch(SHEET2_DATABASE_URL)
+        function searchCompany(query) {
+            // If the user selects a company from the list, autofill immediately
+            const match = fetchedClients.find(c => c.company === query);
+            if (match) {
+                document.getElementById('user').value = match.user;
+                document.getElementById('mobile').value = match.mobile;
+                document.getElementById('location').value = match.location;
+                return;
+            }
+
+            // Do not send request if input is empty
+            if (query.trim() === "") {
+                document.getElementById('clientList').innerHTML = "";
+                return;
+            }
+
+            // Fetch matched data from Sheet 2 in real-time
+            fetch(SHEET2_DATABASE_URL + "?searchQuery=" + encodeURIComponent(query))
                 .then(response => response.json())
                 .then(data => {
-                    globalClientData = data;
+                    fetchedClients = data;
                     const list = document.getElementById('clientList');
                     list.innerHTML = ""; 
+                    
                     data.forEach(client => {
                         let option = document.createElement('option');
                         option.value = client.company;
@@ -93,26 +106,13 @@
                     });
                 })
                 .catch(error => console.error('Error fetching database:', error));
-        };
-
-        // 2. Autofill fields when a company is selected
-        function autoFillData(val) {
-            const client = globalClientData.find(c => c.company === val);
-            if (client) {
-                document.getElementById('user').value = client.user;
-                document.getElementById('mobile').value = client.mobile;
-                document.getElementById('location').value = client.location;
-            }
         }
 
-        // 3. Submit form data to Sheet 1 (Task Form)
         document.getElementById('taskForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const msgDiv = document.getElementById('message');
-            msgDiv.style.display = 'block';
-            msgDiv.style.backgroundColor = '#f0f0f0';
-            msgDiv.textContent = 'Processing...';
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.innerText = 'Processing...';
 
             const formData = {
                 author: document.getElementById('author').value,
@@ -127,19 +127,18 @@
 
             fetch(SHEET1_SUBMIT_URL, {
                 method: 'POST',
-                mode: 'no-cors',
-                cache: 'no-cache',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                 body: JSON.stringify(formData)
             })
-            .then(() => {
-                msgDiv.style.backgroundColor = '#d4edda';
-                msgDiv.textContent = 'Success! Task submitted and Telegram message sent.';
+            .then(response => response.text())
+            .then(result => {
+                alert('Task Submitted Successfully!');
                 document.getElementById('taskForm').reset();
+                submitBtn.innerText = 'Submit Task';
             })
             .catch(error => {
-                msgDiv.style.backgroundColor = '#f8d7da';
-                msgDiv.textContent = 'Error: ' + error.message;
+                alert('Error submitting task.');
+                submitBtn.innerText = 'Submit Task';
             });
         });
     </script>
