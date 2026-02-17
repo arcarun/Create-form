@@ -11,12 +11,12 @@
             background-color: grey; 
             color: white; 
             margin: 0; 
-            padding: 5px; 
+            padding: 0; /* Set to 0 to allow full screen height */
             display: flex; 
             justify-content: center; 
             align-items: center; 
             height: 100vh; 
-            overflow: hidden; /* Prevent scrolling, keeps form on one page */
+            overflow: hidden; 
         }
 
         /* Falling Flowers Animation */
@@ -32,21 +32,22 @@
             to { transform: translateY(110vh) rotate(360deg); }
         }
 
-        /* Form Container - Black Background */
+        /* Form Container - Full Height, Black Background */
         .form-container { 
             background-color: black; 
             width: 100%; 
             max-width: 450px; 
-            padding: 15px; 
-            border-radius: 8px; 
-            border: 2px solid green; 
+            height: 100vh; /* Stretches form strictly from top to bottom */
+            padding: 15px 20px; 
+            border-left: 2px solid green; 
+            border-right: 2px solid green; 
+            /* Removed border-radius to make it flush top-to-bottom */
             box-shadow: 0 4px 15px rgba(0,0,0,0.8); 
             box-sizing: border-box; 
-            z-index: 1; /* Keep above flowers */
+            z-index: 1; 
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            max-height: 98vh;
         }
 
         h2 { 
@@ -91,16 +92,19 @@
             background-color: #222; 
         }
         
-        /* Radio Buttons - Single Line strict forcing */
+        /* Radio Buttons - Boxed Design (Like Image 2) & Single Line */
         .radio-group { 
             display: flex; 
             flex-direction: row; 
-            flex-wrap: nowrap; /* Forces elements to stay in a single line */
+            flex-wrap: nowrap; 
             justify-content: space-between; 
             align-items: center;
             gap: 2px; 
-            margin-top: 2px; 
-            padding: 4px 0; 
+            margin-top: 4px; 
+            padding: 8px 10px; /* Added padding to create the box */
+            background-color: #1b2e21; /* Dark greenish background */
+            border: 1px solid #3d5e45; /* Green border around the group */
+            border-radius: 4px; /* Rounded corners for the box */
         }
         .radio-label { 
             display: flex; 
@@ -110,7 +114,7 @@
             cursor: pointer; 
             margin: 0; 
             color: white; 
-            white-space: nowrap; /* Prevents text from breaking */
+            white-space: nowrap; 
         }
         .radio-label input { 
             margin-right: 3px; 
@@ -171,10 +175,10 @@
             cursor: pointer; 
             border-bottom: 1px solid green; 
             font-size: 12px; 
-            color: yellow; /* Yellow recommendation color */
-            white-space: nowrap; /* Single line */
+            color: yellow; 
+            white-space: nowrap; 
             overflow: hidden; 
-            text-overflow: ellipsis; /* Adds '...' if address is too long */
+            text-overflow: ellipsis; 
             display: block;
         }
         .suggestion-item:last-child { border-bottom: none; }
@@ -187,11 +191,12 @@
         .error-message { color: #ff5252; font-size: 12px; margin-bottom: 15px; word-wrap: break-word; text-align: left; background: #111; padding: 8px; border-radius: 4px; border: 1px solid #ff5252; display: none; }
         .btn-recreate { background-color: green; color: white; border: none; padding: 10px 20px; font-size: 14px; border-radius: 4px; cursor: pointer; width: 100%; font-weight: bold; }
 
-        /* Mobile specific adjustments to ensure single line fit */
+        /* Mobile specific adjustments */
         @media (max-width: 400px) {
             .radio-label { font-size: 10.5px; }
             .radio-label input { transform: scale(0.85); margin-right: 1px; }
             .form-container { padding: 10px; }
+            .radio-group { padding: 6px 4px; gap: 1px; } /* Kept tight to fit inside the new box layout */
             input[type="text"], textarea { padding: 5px; font-size: 12px; }
         }
     </style>
@@ -258,7 +263,7 @@
 
         <div class="form-group">
             <label>Problem <span class="required">*</span></label>
-            <textarea id="problem" placeholder="Describe the issue..." rows="2" required></textarea>
+            <textarea id="problem" placeholder="Describe the issue..." rows="4" required></textarea>
         </div>
 
         <div class="action-container">
@@ -298,13 +303,11 @@
     const userSugg = document.getElementById("user-suggestions");
 
     function handleInput(e, type) {
-        // Lowercase query for universal case-insensitive matching
         const query = e.target.value.toLowerCase(); 
         const suggBox = type === 'company' ? companySugg : userSugg;
         
         suggBox.innerHTML = "";
         
-        // Triggers strictly at 3 characters
         if (query.length < 3) {
             suggBox.style.display = "none";
             return;
@@ -312,7 +315,6 @@
 
         const matches = db.filter(item => {
             const val = type === 'company' ? (item.company || "") : (item.user || "");
-            // Converts database string to lowercase to match the lowercase query
             return val.toLowerCase().includes(query); 
         });
 
@@ -324,11 +326,9 @@
         matches.forEach(match => {
             const div = document.createElement("div");
             div.className = "suggestion-item";
-            // Formatted to show strictly in a single line without <br> tags
             div.innerHTML = `${match.company} - ${match.user} - ${match.location}`;
             
             div.onclick = () => {
-                // Auto-fill assigns string to inputs, which renders in default white color
                 companyInput.value = match.company || "";
                 userInput.value = match.user || "";
                 mobileInput.value = match.mobile || "";
