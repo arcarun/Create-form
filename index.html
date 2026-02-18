@@ -5,26 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>A R Computers - Task Entry Form</title>
     <style>
-        /* Background & Universal Reset */
+        /* Background & Universal Reset - Pro UI */
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             background-color: grey; 
             color: white; 
             margin: 0; 
-            padding: 0; 
+            padding: 10px; /* Added slight padding so form doesn't touch screen edges on small devices */
             display: flex; 
             justify-content: center; 
             align-items: center; 
             min-height: 100vh; 
-            overflow-y: auto; /* Allows scrolling only if screen is extremely small, prevents cut-offs */
+            overflow-x: hidden; /* Prevent horizontal scroll from flowers */
+            overflow-y: auto; /* Allow vertical scroll if screen is too small */
         }
 
-        /* Falling Flowers Animation */
+        /* Falling Flowers Animation - Variety & Quantity */
         .flower {
-            position: absolute;
+            position: fixed; /* Fixed so they cover the whole scrollable area */
             top: -10vh;
             font-size: 24px;
-            z-index: 0;
+            z-index: 0; /* Keeps flowers strictly behind the form */
             user-select: none;
             animation: fall linear infinite;
         }
@@ -32,86 +33,80 @@
             to { transform: translateY(110vh) rotate(360deg); }
         }
 
-        /* Form Container - Full Height, Black Background */
+        /* Form Container - Premium Dark Mode, Responsive Height */
         .form-container { 
-            background-color: black; 
+            background-color: #121212; /* True Dark Mode instead of harsh #000 */
             width: 100%; 
             max-width: 450px; 
-            min-height: 100vh; /* Stretches form strictly from top to bottom */
-            padding: 15px 20px; 
-            border-left: 2px solid green; 
-            border-right: 2px solid green; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.8); 
+            /* min-height removed to allow form to shrink/grow based on content naturally */
+            padding: 20px 25px; /* Increased padding for chunkier, premium feel */
+            border: 2px solid #2e7d32; /* Richer green border */
+            border-radius: 12px; /* Pro rounded corners */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8); /* Deeper, softer shadow */
             box-sizing: border-box; 
-            z-index: 1; 
+            z-index: 1; /* Keeps form above flowers */
             display: flex;
             flex-direction: column;
         }
 
         h2 { 
             margin-top: 0; 
-            margin-bottom: 5px; 
+            margin-bottom: 20px; /* More breathing room */
             text-align: center; 
-            border-bottom: 1px solid green; 
-            padding-bottom: 10px; 
-            font-size: 18px; 
+            border-bottom: 2px solid #2e7d32; 
+            padding-bottom: 12px; 
+            font-size: 20px; 
             color: #ffffff; 
-            flex-shrink: 0;
-        }
-
-        /* Form styling to evenly distribute space and fix the black gap */
-        #taskForm {
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1; /* Takes up all remaining space */
-            justify-content: space-evenly; /* Distributes gaps perfectly between boxes */
+            letter-spacing: 1px;
         }
 
         .form-group { 
             position: relative; 
-            /* margin-bottom removed because space-evenly handles perfect gapping automatically */
+            margin-bottom: 15px; /* Reintroduced fixed margin for controlled, chunky spacing */
         }
         
         label { 
             display: block; 
-            font-weight: bold; 
-            margin-bottom: 3px; 
+            font-weight: 600; 
+            margin-bottom: 6px; 
             color: #b9d6c3; 
-            font-size: 12px; 
+            font-size: 13px; /* Slightly larger for readability */
         }
         
         .required { color: #ff5252; }
         
-        /* Input Fields - Green Border */
+        /* Input Fields - Larger, Chunkier, Smooth Focus */
         input[type="text"], textarea { 
             width: 100%; 
-            padding: 8px; 
-            border: 1px solid green; 
-            border-radius: 4px; 
-            font-size: 13px; 
+            padding: 12px; /* Bigger boxes */
+            border: 1px solid #3d5e45; 
+            border-radius: 8px; /* Softer edges */
+            font-size: 14px; 
             box-sizing: border-box; 
-            background-color: #111; 
+            background-color: #1e1e1e; /* Elevated dark input background */
             color: white; 
+            transition: all 0.3s ease; /* Smooth glow effect */
         }
         input[type="text"]:focus, textarea:focus { 
-            border-color: #81c784; 
+            border-color: #4caf50; 
             outline: none; 
-            background-color: #222; 
+            background-color: #2a2a2a; 
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.4); /* Pro green glow */
         }
         
-        /* Radio Buttons - Boxed Design & Single Line */
+        /* Radio Buttons - Premium Boxed Design */
         .radio-group { 
             display: flex; 
             flex-direction: row; 
-            flex-wrap: nowrap; /* Forces elements to stay in a single line */
+            flex-wrap: nowrap; 
             justify-content: space-between; 
             align-items: center;
             gap: 2px; 
             margin-top: 2px; 
-            padding: 8px 10px; /* Creates the box effect */
-            background-color: #1b2e21; /* Dark greenish background */
-            border: 1px solid #3d5e45; /* Green border around the group */
-            border-radius: 4px; /* Rounded corners */
+            padding: 10px 12px; /* Chunkier box */
+            background-color: #1e2b22; 
+            border: 1px solid #3d5e45; 
+            border-radius: 8px; 
             box-sizing: border-box;
             width: 100%;
         }
@@ -119,16 +114,18 @@
             display: flex; 
             align-items: center; 
             font-weight: normal; 
-            font-size: 12px; 
+            font-size: 13px; 
             cursor: pointer; 
             margin: 0; 
-            color: white; 
+            color: #e0e0e0; 
             white-space: nowrap; 
         }
         .radio-label input { 
-            margin-right: 3px; 
+            margin-right: 5px; 
             cursor: pointer; 
-            accent-color: green; 
+            accent-color: #4caf50; 
+            width: 16px;
+            height: 16px;
         }
 
         /* Action Buttons */
@@ -137,53 +134,56 @@
             justify-content: space-between; 
             align-items: center; 
             padding-top: 15px; 
-            border-top: 1px solid green; 
-            flex-shrink: 0;
+            margin-top: 5px;
+            border-top: 1px solid #3d5e45; 
         }
         .btn-submit { 
-            background-color: green; 
+            background-color: #2e7d32; 
             color: white; 
             border: none; 
-            padding: 10px 25px; 
-            font-size: 14px; 
-            border-radius: 4px; 
+            padding: 12px 25px; /* Bigger button */
+            font-size: 16px; 
+            border-radius: 8px; 
             cursor: pointer; 
             font-weight: bold; 
-            width: 60%; 
+            width: 65%; 
+            transition: background-color 0.2s;
         }
+        .btn-submit:hover { background-color: #4caf50; }
         .btn-submit:disabled { background-color: #81c784; cursor: not-allowed; }
+        
         .btn-clear { 
             background: none; 
             color: #ff5252; 
             border: none; 
-            font-size: 12px; 
+            font-size: 13px; 
             cursor: pointer; 
             font-weight: bold; 
-            width: 35%; 
+            width: 30%; 
             text-align: right; 
         }
 
-        /* Suggestions Box - Yellow Text, Single Line, Truncated */
+        /* Suggestions Box */
         .suggestions { 
             position: absolute; 
             top: 100%; 
             left: 0; 
             right: 0; 
-            background: black; 
-            border: 1px solid green; 
+            background: #1e1e1e; 
+            border: 1px solid #4caf50; 
             border-top: none; 
-            border-radius: 0 0 4px 4px; 
-            max-height: 120px; 
+            border-radius: 0 0 8px 8px; 
+            max-height: 150px; 
             overflow-y: auto; 
             z-index: 9999; 
             display: none; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.5); 
+            box-shadow: 0 8px 16px rgba(0,0,0,0.8); 
         }
         .suggestion-item { 
-            padding: 8px; 
+            padding: 12px; 
             cursor: pointer; 
-            border-bottom: 1px solid green; 
-            font-size: 12px; 
+            border-bottom: 1px solid #3d5e45; 
+            font-size: 13px; 
             color: yellow; 
             white-space: nowrap; 
             overflow: hidden; 
@@ -191,31 +191,52 @@
             display: block;
         }
         .suggestion-item:last-child { border-bottom: none; }
-        .suggestion-item:hover { background-color: #222; }
+        .suggestion-item:hover { background-color: #2a2a2a; }
 
         /* Popup styling */
-        #popup { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; z-index: 10000; }
-        .popup-content { background: black; padding: 25px; border-radius: 8px; text-align: center; width: 85%; max-width: 350px; box-shadow: 0 4px 15px rgba(0,0,0,0.8); border: 2px solid green; }
-        .popup-content h3 { color: green; margin-top: 0; font-size: 18px; margin-bottom: 10px; }
-        .error-message { color: #ff5252; font-size: 12px; margin-bottom: 15px; word-wrap: break-word; text-align: left; background: #111; padding: 8px; border-radius: 4px; border: 1px solid #ff5252; display: none; }
-        .btn-recreate { background-color: green; color: white; border: none; padding: 10px 20px; font-size: 14px; border-radius: 4px; cursor: pointer; width: 100%; font-weight: bold; }
+        #popup { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; z-index: 10000; }
+        .popup-content { background: #121212; padding: 30px; border-radius: 12px; text-align: center; width: 85%; max-width: 350px; box-shadow: 0 10px 30px rgba(0,0,0,0.9); border: 2px solid #4caf50; }
+        .popup-content h3 { color: #4caf50; margin-top: 0; font-size: 20px; margin-bottom: 15px; }
+        .error-message { color: #ff5252; font-size: 13px; margin-bottom: 15px; word-wrap: break-word; text-align: left; background: #2a0000; padding: 10px; border-radius: 6px; border: 1px solid #ff5252; display: none; }
+        .btn-recreate { background-color: #2e7d32; color: white; border: none; padding: 12px 20px; font-size: 15px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; }
 
-        /* Mobile specific adjustments to maintain single line fit without breaking layout */
-        @media (max-width: 400px) {
-            .radio-label { font-size: 10.5px; }
-            .radio-label input { transform: scale(0.85); margin-right: 1px; }
-            .radio-group { padding: 8px 4px; gap: 1px; }
-            input[type="text"], textarea { padding: 6px; font-size: 12px; }
+        /* Mobile specific adjustments to ensure perfect fit without breaking */
+        @media (max-width: 420px) {
+            .form-container { padding: 15px 12px; }
+            .radio-label { font-size: 11px; }
+            .radio-label input { transform: scale(0.85); margin-right: 2px; }
+            .radio-group { padding: 10px 4px; gap: 1px; }
+            input[type="text"], textarea { padding: 10px; font-size: 13px; }
+            h2 { font-size: 18px; margin-bottom: 15px; }
+            .form-group { margin-bottom: 12px; }
         }
     </style>
 </head>
 <body>
 
-<div class="flower" style="left: 10%; animation-duration: 6s;">🌸</div>
-<div class="flower" style="left: 25%; animation-duration: 8s; animation-delay: 1s;">🌼</div>
-<div class="flower" style="left: 45%; animation-duration: 5s; animation-delay: 2s;">🌸</div>
-<div class="flower" style="left: 70%; animation-duration: 7s; animation-delay: 0.5s;">🌼</div>
-<div class="flower" style="left: 85%; animation-duration: 6.5s; animation-delay: 1.5s;">🌸</div>
+<div class="flower" style="left: 5%; animation-duration: 7s; font-size: 20px;">🌸</div>
+<div class="flower" style="left: 10%; animation-duration: 12s; animation-delay: 2s; font-size: 26px;">🌼</div>
+<div class="flower" style="left: 15%; animation-duration: 9s; animation-delay: 4s; font-size: 18px;">🌹</div>
+<div class="flower" style="left: 20%; animation-duration: 6s; animation-delay: 1s; font-size: 24px;">🌺</div>
+<div class="flower" style="left: 25%; animation-duration: 11s; animation-delay: 3s; font-size: 22px;">🌻</div>
+
+<div class="flower" style="left: 30%; animation-duration: 8s; animation-delay: 0.5s; font-size: 28px;">🌸</div>
+<div class="flower" style="left: 35%; animation-duration: 14s; animation-delay: 5s; font-size: 19px;">🌷</div>
+<div class="flower" style="left: 40%; animation-duration: 7.5s; animation-delay: 2.5s; font-size: 25px;">🌼</div>
+<div class="flower" style="left: 45%; animation-duration: 10s; animation-delay: 1.5s; font-size: 21px;">🪷</div>
+<div class="flower" style="left: 50%; animation-duration: 6.5s; animation-delay: 4.5s; font-size: 24px;">🌹</div>
+
+<div class="flower" style="left: 55%; animation-duration: 12s; animation-delay: 0s; font-size: 20px;">🌺</div>
+<div class="flower" style="left: 60%; animation-duration: 9.5s; animation-delay: 3.5s; font-size: 26px;">🌻</div>
+<div class="flower" style="left: 65%; animation-duration: 8.5s; animation-delay: 2s; font-size: 18px;">🌸</div>
+<div class="flower" style="left: 70%; animation-duration: 13s; animation-delay: 6s; font-size: 27px;">🌼</div>
+<div class="flower" style="left: 75%; animation-duration: 7s; animation-delay: 1s; font-size: 22px;">🌷</div>
+
+<div class="flower" style="left: 80%; animation-duration: 11s; animation-delay: 4s; font-size: 25px;">🌹</div>
+<div class="flower" style="left: 85%; animation-duration: 6s; animation-delay: 2.5s; font-size: 19px;">🌺</div>
+<div class="flower" style="left: 90%; animation-duration: 10.5s; animation-delay: 0.5s; font-size: 28px;">🪷</div>
+<div class="flower" style="left: 95%; animation-duration: 8s; animation-delay: 3s; font-size: 21px;">🌻</div>
+<div class="flower" style="left: 98%; animation-duration: 15s; animation-delay: 5.5s; font-size: 24px;">🌸</div>
 
 <div class="form-container">
     <h2>Task Entry Form</h2>
@@ -368,11 +389,11 @@
         popup.style.display = "flex";
         if (isSuccess) {
             popupTitle.innerHTML = "☑ Task Submitted";
-            popupTitle.style.color = "green";
-            popup.querySelector('.popup-content').style.borderColor = "green";
+            popupTitle.style.color = "#4caf50";
+            popup.querySelector('.popup-content').style.borderColor = "#4caf50";
             errorDetails.style.display = "none";
             recreateBtn.innerText = "Re-create";
-            recreateBtn.style.backgroundColor = "green";
+            recreateBtn.style.backgroundColor = "#2e7d32";
         } else {
             popupTitle.innerHTML = "⚠ Submission Failed";
             popupTitle.style.color = "#ff5252";
