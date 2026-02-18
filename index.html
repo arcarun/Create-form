@@ -6,26 +6,30 @@
     <title>A R Computers - Task Entry Form</title>
     <style>
         /* Background & Universal Reset - Pro UI */
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             background-color: grey; 
             color: white; 
             margin: 0; 
-            padding: 10px; /* Added slight padding so form doesn't touch screen edges on small devices */
+            padding: 10px; 
             display: flex; 
             justify-content: center; 
             align-items: center; 
             min-height: 100vh; 
-            overflow-x: hidden; /* Prevent horizontal scroll from flowers */
-            overflow-y: auto; /* Allow vertical scroll if screen is too small */
+            overflow: hidden; 
         }
 
-        /* Falling Flowers Animation - Variety & Quantity */
+        /* Falling Flowers Animation - 20 Flowers */
         .flower {
-            position: fixed; /* Fixed so they cover the whole scrollable area */
+            position: fixed; 
             top: -10vh;
             font-size: 24px;
-            z-index: 0; /* Keeps flowers strictly behind the form */
+            z-index: 0; 
             user-select: none;
             animation: fall linear infinite;
         }
@@ -35,97 +39,107 @@
 
         /* Form Container - Premium Dark Mode, Responsive Height */
         .form-container { 
-            background-color: #121212; /* True Dark Mode instead of harsh #000 */
+            background-color: #121212; 
             width: 100%; 
             max-width: 450px; 
-            /* min-height removed to allow form to shrink/grow based on content naturally */
-            padding: 20px 25px; /* Increased padding for chunkier, premium feel */
-            border: 2px solid #2e7d32; /* Richer green border */
-            border-radius: 12px; /* Pro rounded corners */
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8); /* Deeper, softer shadow */
-            box-sizing: border-box; 
-            z-index: 1; /* Keeps form above flowers */
+            height: 96vh; /* Fits perfectly on desktop without scroll */
+            max-height: 800px;
+            padding: clamp(15px, 2.5vh, 25px) 25px; 
+            border: 2px solid #2e7d32; 
+            border-radius: 12px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8); 
+            z-index: 1; 
             display: flex;
             flex-direction: column;
         }
 
         h2 { 
             margin-top: 0; 
-            margin-bottom: 20px; /* More breathing room */
+            margin-bottom: clamp(10px, 2vh, 20px); 
             text-align: center; 
             border-bottom: 2px solid #2e7d32; 
-            padding-bottom: 12px; 
-            font-size: 20px; 
+            padding-bottom: 10px; 
+            font-size: clamp(18px, 2.5vh, 22px); 
             color: #ffffff; 
             letter-spacing: 1px;
+            flex-shrink: 0;
+        }
+
+        #taskForm {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: space-between; /* Automatically balances small gaps */
         }
 
         .form-group { 
             position: relative; 
-            margin-bottom: 15px; /* Reintroduced fixed margin for controlled, chunky spacing */
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 0; /* Let flex justify-content handle spacing */
         }
         
         label { 
-            display: block; 
             font-weight: 600; 
-            margin-bottom: 6px; 
+            margin-bottom: clamp(2px, 0.8vh, 6px); 
             color: #b9d6c3; 
-            font-size: 13px; /* Slightly larger for readability */
+            font-size: clamp(12px, 1.5vh, 14px); 
         }
         
         .required { color: #ff5252; }
         
-        /* Input Fields - Larger, Chunkier, Smooth Focus */
+        /* Input Fields - Big Boxes, Pro UI */
         input[type="text"], textarea { 
             width: 100%; 
-            padding: 12px; /* Bigger boxes */
+            padding: clamp(10px, 1.8vh, 15px); /* Chunkier boxes */
             border: 1px solid #3d5e45; 
-            border-radius: 8px; /* Softer edges */
+            border-radius: 8px; 
             font-size: 14px; 
-            box-sizing: border-box; 
-            background-color: #1e1e1e; /* Elevated dark input background */
+            background-color: #1e1e1e; 
             color: white; 
-            transition: all 0.3s ease; /* Smooth glow effect */
+            transition: all 0.3s ease; 
         }
+        
+        textarea#problem {
+            height: clamp(50px, 8vh, 100px); /* Auto-adjusts height, prevents push-down */
+            resize: none;
+        }
+
         input[type="text"]:focus, textarea:focus { 
             border-color: #4caf50; 
             outline: none; 
             background-color: #2a2a2a; 
-            box-shadow: 0 0 8px rgba(76, 175, 80, 0.4); /* Pro green glow */
+            box-shadow: 0 0 8px rgba(76, 175, 80, 0.4); 
         }
         
-        /* Radio Buttons - Premium Boxed Design */
+        /* Radio Buttons - Boxed Design */
         .radio-group { 
             display: flex; 
             flex-direction: row; 
             flex-wrap: nowrap; 
             justify-content: space-between; 
             align-items: center;
-            gap: 2px; 
-            margin-top: 2px; 
-            padding: 10px 12px; /* Chunkier box */
+            padding: clamp(8px, 1.5vh, 12px) 10px; /* Chunkier box */
             background-color: #1e2b22; 
             border: 1px solid #3d5e45; 
             border-radius: 8px; 
-            box-sizing: border-box;
             width: 100%;
         }
         .radio-label { 
             display: flex; 
             align-items: center; 
-            font-weight: normal; 
-            font-size: 13px; 
+            font-size: clamp(11px, 1.5vh, 13px); 
             cursor: pointer; 
             margin: 0; 
             color: #e0e0e0; 
             white-space: nowrap; 
         }
         .radio-label input { 
-            margin-right: 5px; 
+            margin-right: 4px; 
             cursor: pointer; 
             accent-color: #4caf50; 
-            width: 16px;
-            height: 16px;
+            width: clamp(14px, 2vh, 16px);
+            height: clamp(14px, 2vh, 16px);
         }
 
         /* Action Buttons */
@@ -133,16 +147,17 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            padding-top: 15px; 
-            margin-top: 5px;
+            padding-top: clamp(10px, 2vh, 15px); 
+            margin-top: clamp(5px, 1vh, 10px);
             border-top: 1px solid #3d5e45; 
+            flex-shrink: 0;
         }
         .btn-submit { 
             background-color: #2e7d32; 
             color: white; 
             border: none; 
-            padding: 12px 25px; /* Bigger button */
-            font-size: 16px; 
+            padding: clamp(10px, 1.8vh, 15px) 25px; 
+            font-size: clamp(14px, 2vh, 16px); 
             border-radius: 8px; 
             cursor: pointer; 
             font-weight: bold; 
@@ -156,7 +171,7 @@
             background: none; 
             color: #ff5252; 
             border: none; 
-            font-size: 13px; 
+            font-size: clamp(12px, 1.8vh, 14px); 
             cursor: pointer; 
             font-weight: bold; 
             width: 30%; 
@@ -173,14 +188,14 @@
             border: 1px solid #4caf50; 
             border-top: none; 
             border-radius: 0 0 8px 8px; 
-            max-height: 150px; 
+            max-height: 25vh; 
             overflow-y: auto; 
             z-index: 9999; 
             display: none; 
             box-shadow: 0 8px 16px rgba(0,0,0,0.8); 
         }
         .suggestion-item { 
-            padding: 12px; 
+            padding: clamp(10px, 1.8vh, 14px); 
             cursor: pointer; 
             border-bottom: 1px solid #3d5e45; 
             font-size: 13px; 
@@ -200,15 +215,26 @@
         .error-message { color: #ff5252; font-size: 13px; margin-bottom: 15px; word-wrap: break-word; text-align: left; background: #2a0000; padding: 10px; border-radius: 6px; border: 1px solid #ff5252; display: none; }
         .btn-recreate { background-color: #2e7d32; color: white; border: none; padding: 12px 20px; font-size: 15px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; }
 
-        /* Mobile specific adjustments to ensure perfect fit without breaking */
-        @media (max-width: 420px) {
-            .form-container { padding: 15px 12px; }
-            .radio-label { font-size: 11px; }
-            .radio-label input { transform: scale(0.85); margin-right: 2px; }
-            .radio-group { padding: 10px 4px; gap: 1px; }
-            input[type="text"], textarea { padding: 10px; font-size: 13px; }
-            h2 { font-size: 18px; margin-bottom: 15px; }
-            .form-group { margin-bottom: 12px; }
+        /* Full Native App Mode for Mobile */
+        @media (max-width: 500px) {
+            body { 
+                padding: 0; 
+            }
+            .form-container { 
+                height: 100dvh; /* Dynamic viewport handles address bars perfectly */
+                max-height: 100dvh;
+                width: 100vw;
+                max-width: 100vw;
+                border-radius: 0; 
+                border: none; 
+                padding: 3dvh 5vw; /* Perfectly balanced edges */
+            }
+            .radio-group { 
+                padding: 1.5dvh 2vw; 
+            }
+            .radio-label { 
+                font-size: clamp(10px, 3vw, 12.5px); 
+            }
         }
     </style>
 </head>
@@ -292,7 +318,7 @@
 
         <div class="form-group">
             <label>Problem <span class="required">*</span></label>
-            <textarea id="problem" placeholder="Describe the issue..." rows="4" required></textarea>
+            <textarea id="problem" placeholder="Describe the issue..." required></textarea>
         </div>
 
         <div class="action-container">
