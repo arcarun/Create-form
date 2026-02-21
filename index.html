@@ -39,13 +39,13 @@
             to { transform: translateY(110vh) rotate(360deg); }
         }
 
-        /* Form Container - White Background - Strictly Locked to Old Size */
+        /* Form Container - Locked to Original Desktop Size (First Code) */
         .form-container { 
             background-color: #ffffff; 
             width: 100%; 
-            max-width: 450px; /* Locked to 450px */
+            max-width: 450px; /* Strictly 450px */
             margin: auto; 
-            padding: 20px 25px; /* Locked padding */
+            padding: 20px 25px; /* Strictly 20px 25px */
             border: 2px solid #2e7d32; 
             border-radius: 12px; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
@@ -134,7 +134,7 @@
         .type-box {
             flex-wrap: nowrap;
             justify-content: space-between;
-            gap: 0; /* Gap completely removed */
+            gap: 0; 
             overflow: hidden; 
         }
 
@@ -150,20 +150,24 @@
             background-color: #f1f1f1; 
             padding: 8px 4px; 
             border-radius: 4px;
-            border: 1px solid #ddd;
+            border: 1px solid #ddd; /* Default Border */
             flex-grow: 1; 
             white-space: nowrap; 
-            transition: background 0.2s;
+            transition: all 0.2s;
         }
         
-        /* Minimal separation for Type box items */
         .type-box .radio-label {
             margin: 0 1px; 
-            border-radius: 2px;
         }
 
         .radio-label:hover {
             background-color: #e0e0e0;
+        }
+
+        /* Active Selection: Radiant Purple Border */
+        .radio-label:has(input:checked) {
+            border: 2px solid #9c27b0; /* Bold Radiant Purple */
+            background-color: #f3e5f5; /* Slight highlighted bg */
         }
 
         /* Square Tick Box Logic */
@@ -180,7 +184,7 @@
             flex-shrink: 0;
         }
 
-        /* Tick Fill Effect */
+        /* Tick Fill Effect (Green) */
         .radio-label input:checked {
             background-color: #2e7d32; 
             border-color: #2e7d32;
@@ -261,7 +265,7 @@
         .popup-content h3 { color: #4caf50; margin-top: 0; font-size: 20px; margin-bottom: 0; }
         .error-message { color: #ff5252; font-size: 13px; margin-top: 15px; margin-bottom: 15px; word-wrap: break-word; text-align: left; background: #ffebee; padding: 10px; border-radius: 6px; border: 1px solid #ffcdd2; display: none; }
 
-        /* Mobile Adjustments */
+        /* Mobile Adjustments - Kept safe as requested */
         @media (max-width: 768px) {
             body { padding: 0; }
             .form-container { 
@@ -454,7 +458,6 @@
         popup.querySelector('.popup-content').style.borderColor = "#4caf50";
         errorDetails.style.display = "none";
         
-        // Wait 1 second, then reset form and close popup
         setTimeout(() => {
             form.reset();
             popup.style.display = "none";
