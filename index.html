@@ -40,6 +40,7 @@
         }
 
         /* Form Container - Desktop Size Locked (450px) */
+        /* SQUARE CORNERS APPLIED */
         .form-container { 
             background-color: #ffffff; 
             width: 100%; 
@@ -47,7 +48,7 @@
             margin: auto; 
             padding: 15px 25px; 
             border: 2px solid #2e7d32; 
-            border-radius: 12px; 
+            border-radius: 0; /* Square */
             box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
             z-index: 1; 
             display: flex;
@@ -90,12 +91,12 @@
         
         .required { color: #ff5252; }
         
-        /* Input Fields - Desktop: Compact */
+        /* Input Fields - SQUARE CORNERS */
         input[type="text"], textarea { 
             width: 100%; 
             padding: 8px 10px; 
             border: 1px solid #ccc; 
-            border-radius: 8px; 
+            border-radius: 0; /* Square */
             font-size: 14px; 
             background-color: #f9f9f9; 
             color: #000; 
@@ -114,10 +115,10 @@
             box-shadow: 0 0 5px rgba(76, 175, 80, 0.3); 
         }
 
-        /* Bordered Box for Buttons */
+        /* Bordered Box for Buttons - SQUARE CORNERS */
         .radio-bordered-box {
             border: 1px solid #ccc;
-            border-radius: 8px;
+            border-radius: 0; /* Square */
             padding: 4px; 
             background-color: #fdfdfd;
             display: flex;
@@ -136,7 +137,7 @@
             overflow: hidden; 
         }
 
-        /* Radio Buttons - No Tick Box Style */
+        /* Radio Buttons - No Tick Box Style - SQUARE CORNERS */
         .radio-label { 
             display: flex; 
             align-items: center; 
@@ -144,15 +145,16 @@
             font-size: 11px; 
             cursor: pointer; 
             margin: 0; 
-            color: #000; /* Black Text */
+            color: #000; /* Black Text default */
             background-color: #f1f1f1; 
             padding: 10px 4px; 
-            border-radius: 4px;
+            border-radius: 0; /* Square */
             border: 1px solid #ddd; 
             flex-grow: 1; 
             white-space: nowrap; 
             transition: all 0.2s;
             text-align: center;
+            font-weight: normal; /* Not Bold */
         }
         
         .type-box .radio-label {
@@ -164,25 +166,25 @@
             display: none;
         }
 
-        /* Selection: Fill Green + Black Text + Purple Radiant Border */
+        /* Selection: Fill Green + White Text + Purple Radiant Border */
         .radio-label:has(input:checked) {
             background-color: #2e7d32; /* Fill Green */
-            color: #000; /* Black Text */
+            color: #ffffff; /* White Text */
             border: 2px solid #9c27b0; /* Radiant Purple Border */
-            font-weight: bold;
         }
 
+        /* Anydesk Text - Always Red */
         .anydesk-text {
             color: #d32f2f; 
-            font-weight: bold;
+            font-weight: normal;
         }
         
-        /* Ensure Anydesk text stays readable/black when selected */
+        /* Ensure Anydesk text stays Red even when selected (as requested "hmesha red") */
         .radio-label:has(input:checked) .anydesk-text {
-            color: #000;
+            color: #d32f2f;
         }
 
-        /* Action Buttons */
+        /* Action Buttons - SQUARE CORNERS */
         .action-container { 
             display: flex; 
             justify-content: space-between; 
@@ -198,7 +200,7 @@
             border: none; 
             padding: 10px 25px; 
             font-size: 15px; 
-            border-radius: 8px; 
+            border-radius: 0; /* Square */
             cursor: pointer; 
             font-weight: bold; 
             width: 65%; 
@@ -239,19 +241,19 @@
             cursor: pointer; 
             border-bottom: 1px solid #eee; 
             font-size: 13px; 
-            color: #333; 
+            color: #9c27b0; /* Purple Color for Recommendations */
             display: block;
         }
         .suggestion-item:last-child { border-bottom: none; }
         .suggestion-item:hover { background-color: #f1f1f1; }
 
-        /* Popup styling */
+        /* Popup styling - SQUARE CORNERS */
         #popup { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 10000; }
-        .popup-content { background: #ffffff; padding: 30px; border-radius: 12px; text-align: center; width: 85%; max-width: 350px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid #4caf50; }
+        .popup-content { background: #ffffff; padding: 30px; border-radius: 0; /* Square */ text-align: center; width: 85%; max-width: 350px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid #4caf50; }
         .popup-content h3 { color: #4caf50; margin-top: 0; font-size: 20px; margin-bottom: 0; }
-        .error-message { color: #ff5252; font-size: 13px; margin-top: 15px; margin-bottom: 15px; word-wrap: break-word; text-align: left; background: #ffebee; padding: 10px; border-radius: 6px; border: 1px solid #ffcdd2; display: none; }
+        .error-message { color: #ff5252; font-size: 13px; margin-top: 15px; margin-bottom: 15px; word-wrap: break-word; text-align: left; background: #ffebee; padding: 10px; border-radius: 0; border: 1px solid #ffcdd2; display: none; }
 
-        /* Mobile View - Mote Boxes Logic */
+        /* Mobile View Adjustment */
         @media (max-width: 768px) {
             body { padding: 0; }
             .form-container { 
@@ -259,21 +261,20 @@
                 max-width: 100vw; 
                 min-height: 100dvh; 
                 margin: 0;
-                border-radius: 0; 
                 border: none; 
                 padding: 15px 5vw; 
             }
-            /* Increased padding for "Mote" Boxes on Mobile */
+            /* Decreased padding for Mobile to ensure fit */
             input[type="text"], textarea { 
-                padding: 15px 12px; 
+                padding: 10px 10px; /* Reduced from 15px */
                 font-size: 16px; 
             }
             .radio-label {
-                padding: 15px 4px;
+                padding: 10px 4px; /* Reduced padding */
                 font-size: 12px;
             }
             .form-group {
-                margin-bottom: 12px;
+                margin-bottom: 8px; /* Slightly tighter spacing */
             }
         }
     </style>
