@@ -20,7 +20,7 @@
             padding: 10px; 
             display: flex; 
             justify-content: center; 
-            align-items: flex-start; /* Aligns to top to ensure visibility if height varies */
+            align-items: flex-start; 
             min-height: 100dvh; 
             overflow-x: hidden; 
             overflow-y: auto; 
@@ -40,13 +40,13 @@
         }
 
         /* Form Container - Desktop Size Locked (450px) */
-        /* Vertical Spacing optimized to fit on screen without scrolling */
+        /* Vertical Spacing optimized to fit on screen while keeping Problem box large */
         .form-container { 
             background-color: #ffffff; 
             width: 100%; 
             max-width: 450px; /* Locked to 450px */
             margin: auto; 
-            padding: 15px 25px; /* Reduced top/bottom padding slightly for fit */
+            padding: 15px 25px; /* Compact vertical padding */
             border: 2px solid #2e7d32; 
             border-radius: 12px; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
@@ -57,10 +57,10 @@
 
         h2 { 
             margin-top: 0; 
-            margin-bottom: 10px; /* Reduced from 15px */
+            margin-bottom: 8px; /* Tight margin */
             text-align: center; 
             border-bottom: 2px solid #2e7d32; 
-            padding-bottom: 8px; /* Reduced from 10px */
+            padding-bottom: 5px; 
             font-size: 20px; 
             color: #2e7d32; 
             letter-spacing: 1px;
@@ -79,22 +79,22 @@
             position: relative; 
             display: flex;
             flex-direction: column;
-            margin-bottom: 6px; /* Compact margin (was 10px) to fit screen */
+            margin-bottom: 5px; /* Very tight margin to save space */
         }
         
         label { 
             font-weight: 700; 
-            margin-bottom: 2px; /* Compact margin (was 4px) */
+            margin-bottom: 2px; 
             color: #333333; 
             font-size: 13px; 
         }
         
         .required { color: #ff5252; }
         
-        /* Input Fields - Height optimized */
+        /* Input Fields - Compact Height */
         input[type="text"], textarea { 
             width: 100%; 
-            padding: 9px 12px; /* Reduced padding (was 12px) */
+            padding: 8px 10px; /* Reduced padding for height control */
             border: 1px solid #ccc; 
             border-radius: 8px; 
             font-size: 14px; 
@@ -105,7 +105,7 @@
         
         textarea#problem {
             resize: vertical; 
-            min-height: 60px; /* Reduced min-height */
+            min-height: 80px; /* Maintained size for 4 rows */
         }
 
         input[type="text"]:focus, textarea:focus { 
@@ -119,7 +119,7 @@
         .radio-bordered-box {
             border: 1px solid #ccc;
             border-radius: 8px;
-            padding: 4px; /* Tight padding */
+            padding: 4px; 
             background-color: #fdfdfd;
             display: flex;
         }
@@ -166,10 +166,9 @@
         }
 
         /* Active Selection: Bold Radiant Purple Border */
-        /* Using has() selector to style parent label when input is checked */
         .radio-label:has(input:checked) {
             border: 2px solid #9c27b0; /* Bold Radiant Purple */
-            background-color: #f3e5f5; /* Slight highlight */
+            background-color: #f3e5f5; 
             font-weight: 600;
         }
 
@@ -204,7 +203,7 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            padding-top: 10px; /* Reduced from 15px */
+            padding-top: 10px; 
             margin-top: 5px;
             border-top: 1px solid #ccc; 
             flex-shrink: 0;
@@ -213,7 +212,7 @@
             background-color: #2e7d32; 
             color: white; 
             border: none; 
-            padding: 10px 25px; /* Reduced padding */
+            padding: 10px 25px; 
             font-size: 15px; 
             border-radius: 8px; 
             cursor: pointer; 
@@ -245,7 +244,7 @@
             border: 1px solid #ccc; 
             border-top: none; 
             border-radius: 0 0 8px 8px; 
-            max-height: 150px; /* Reduced height to avoid screen overflow */
+            max-height: 150px; 
             overflow-y: auto; 
             z-index: 9999; 
             display: none; 
@@ -268,7 +267,7 @@
         .popup-content h3 { color: #4caf50; margin-top: 0; font-size: 20px; margin-bottom: 0; }
         .error-message { color: #ff5252; font-size: 13px; margin-top: 15px; margin-bottom: 15px; word-wrap: break-word; text-align: left; background: #ffebee; padding: 10px; border-radius: 6px; border: 1px solid #ffcdd2; display: none; }
 
-        /* Mobile Adjustments - Structure untouched, just fits fluidly */
+        /* Mobile Adjustments - Structure untouched */
         @media (max-width: 768px) {
             body { padding: 0; }
             .form-container { 
@@ -363,7 +362,7 @@
 
         <div class="form-group">
             <label>Problem <span class="required">*</span></label>
-            <textarea id="problem" rows="3" placeholder="Describe the issue..." required></textarea>
+            <textarea id="problem" rows="4" placeholder="Describe the issue..." required></textarea>
         </div>
 
         <div class="action-container">
@@ -461,7 +460,6 @@
         popup.querySelector('.popup-content').style.borderColor = "#4caf50";
         errorDetails.style.display = "none";
         
-        // Wait 1 second, then reset form and close popup
         setTimeout(() => {
             form.reset();
             popup.style.display = "none";
