@@ -39,13 +39,13 @@
             to { transform: translateY(110vh) rotate(360deg); }
         }
 
-        /* Form Container - White Background - Size Locked to Original */
+        /* Form Container - White Background - Strictly Locked to Old Size */
         .form-container { 
             background-color: #ffffff; 
             width: 100%; 
-            max-width: 450px; /* Locked to old size */
+            max-width: 450px; /* Locked to 450px */
             margin: auto; 
-            padding: 20px 25px; /* Locked to old padding */
+            padding: 20px 25px; /* Locked padding */
             border: 2px solid #2e7d32; 
             border-radius: 12px; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
@@ -118,23 +118,24 @@
         .radio-bordered-box {
             border: 1px solid #ccc;
             border-radius: 8px;
-            padding: 8px;
+            padding: 5px;
             background-color: #fdfdfd;
             display: flex;
-            gap: 5px;
         }
 
-        /* Specific Layout for Author (Can wrap if needed) */
+        /* Layout for Author (Standard Gap) */
         .author-box {
             flex-wrap: wrap;
             justify-content: space-between;
+            gap: 5px;
         }
 
-        /* Specific Layout for Type (Single Line Forced) */
+        /* Layout for Type (No Gap, Single Line) */
         .type-box {
-            flex-wrap: nowrap; /* Single line forced */
+            flex-wrap: nowrap;
             justify-content: space-between;
-            overflow-x: auto; /* Scroll if screen too small, though flex-shrink handles it usually */
+            gap: 0; /* Gap completely removed */
+            overflow: hidden; 
         }
 
         /* Radio Labels (Buttons) */
@@ -142,17 +143,23 @@
             display: flex; 
             align-items: center; 
             justify-content: center;
-            font-size: 12px; /* Slightly smaller to fit single line */
+            font-size: 11px; 
             cursor: pointer; 
             margin: 0; 
             color: #333; 
             background-color: #f1f1f1; 
-            padding: 8px 6px; /* Reduced padding for fit */
-            border-radius: 6px;
+            padding: 8px 4px; 
+            border-radius: 4px;
             border: 1px solid #ddd;
             flex-grow: 1; 
-            white-space: nowrap; /* Text won't break */
+            white-space: nowrap; 
             transition: background 0.2s;
+        }
+        
+        /* Minimal separation for Type box items */
+        .type-box .radio-label {
+            margin: 0 1px; 
+            border-radius: 2px;
         }
 
         .radio-label:hover {
@@ -163,11 +170,11 @@
         .radio-label input { 
             appearance: none; 
             -webkit-appearance: none;
-            width: 14px;
-            height: 14px;
+            width: 13px;
+            height: 13px;
             border: 2px solid #2e7d32;
-            border-radius: 3px; /* Square */
-            margin-right: 5px;
+            border-radius: 3px; 
+            margin-right: 3px;
             background-color: white;
             cursor: pointer;
             flex-shrink: 0;
@@ -181,7 +188,7 @@
 
         /* Anydesk Red Text Styling */
         .anydesk-text {
-            color: #d32f2f; /* Red Color */
+            color: #d32f2f; 
             font-weight: bold;
         }
 
@@ -440,42 +447,25 @@
     const popupTitle = document.getElementById("popup-title");
     const errorDetails = document.getElementById("error-details");
 
-    function showPopup(isSuccess, errorText = "") {
+    function showPopup(isSuccess) {
         popup.style.display = "flex";
-        if (isSuccess) {
-            popupTitle.innerHTML = "Submitted Successfully";
-            popupTitle.style.color = "#4caf50";
-            popup.querySelector('.popup-content').style.borderColor = "#4caf50";
-            errorDetails.style.display = "none";
-            
-            setTimeout(() => {
-                form.reset();
-                popup.style.display = "none";
-                submitBtn.innerText = "Submit";
-                submitBtn.disabled = false;
-            }, 1000);
-
-        } else {
-            popupTitle.innerHTML = "⚠ Submission Failed";
-            popupTitle.style.color = "#ff5252";
-            popup.querySelector('.popup-content').style.borderColor = "#ff5252";
-            errorDetails.style.display = "block";
-            errorDetails.innerText = errorText;
-            
-            submitBtn.innerText = "Submit";
-            submitBtn.disabled = false;
-            
-            setTimeout(() => {
-                popup.style.display = "none";
-            }, 3000);
-        }
+        popupTitle.innerHTML = "Submitted Successfully";
+        popupTitle.style.color = "#4caf50";
+        popup.querySelector('.popup-content').style.borderColor = "#4caf50";
+        errorDetails.style.display = "none";
+        
+        // Wait 1 second, then reset form and close popup
+        setTimeout(() => {
+            form.reset();
+            popup.style.display = "none";
+        }, 1000);
     }
 
     form.addEventListener("submit", (e) => {
         e.preventDefault();
         
-        submitBtn.innerText = "Submitting...";
-        submitBtn.disabled = true;
+        // Optimistic UI: Show success popup IMMEDIATELY
+        showPopup(true);
 
         const payload = {
             company: form.company.value,
@@ -488,17 +478,12 @@
             problem: form.problem.value
         };
 
+        // Fire and Forget (Background Submission)
         fetch(POST_URL, {
             method: "POST",
             mode: "no-cors",
             body: JSON.stringify(payload)
-        })
-        .then(() => {
-            showPopup(true);
-        })
-        .catch(err => {
-            showPopup(false, err.toString());
-        });
+        }).catch(err => console.error("Background submission error:", err));
     });
 </script>
 
