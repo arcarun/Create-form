@@ -15,7 +15,7 @@
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             background-color: grey; 
-            color: black; /* Changed to black for visibility on white form */
+            color: black; 
             margin: 0; 
             padding: 10px; 
             display: flex; 
@@ -26,26 +26,26 @@
             overflow-y: auto; 
         }
 
-        /* 4. Falling Flowers Animation - Too Large Big Size */
+        /* Large Falling Flowers */
         .flower {
             position: fixed; 
             top: -15vh;
             z-index: 0; 
             user-select: none;
             animation: fall linear infinite;
-            opacity: 0.6; /* Slightly transparent so they don't block view completely */
+            opacity: 0.6;
         }
         @keyframes fall {
             to { transform: translateY(110vh) rotate(360deg); }
         }
 
-        /* 6. Form Container - White Background */
+        /* Form Container - White Background - Size Locked to Original */
         .form-container { 
-            background-color: #ffffff; /* Changed to White */
+            background-color: #ffffff; 
             width: 100%; 
-            max-width: 450px; 
+            max-width: 450px; /* Locked to old size */
             margin: auto; 
-            padding: 20px 25px; 
+            padding: 20px 25px; /* Locked to old padding */
             border: 2px solid #2e7d32; 
             border-radius: 12px; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
@@ -61,7 +61,7 @@
             border-bottom: 2px solid #2e7d32; 
             padding-bottom: 10px; 
             font-size: 20px; 
-            color: #2e7d32; /* Dark Green Text */
+            color: #2e7d32; 
             letter-spacing: 1px;
             flex-shrink: 0;
             font-weight: bold;
@@ -84,21 +84,21 @@
         label { 
             font-weight: 700; 
             margin-bottom: 4px; 
-            color: #333333; /* Dark Grey Labels */
+            color: #333333; 
             font-size: 13px; 
         }
         
         .required { color: #ff5252; }
         
-        /* Input Fields - Light Theme */
+        /* Input Fields */
         input[type="text"], textarea { 
             width: 100%; 
             padding: 12px; 
-            border: 1px solid #ccc; /* Lighter border */
+            border: 1px solid #ccc; 
             border-radius: 8px; 
             font-size: 14px; 
-            background-color: #f9f9f9; /* Light Grey Input Background */
-            color: #000; /* Black Text */
+            background-color: #f9f9f9; 
+            color: #000; 
             transition: all 0.3s ease; 
         }
         
@@ -113,33 +113,45 @@
             background-color: #ffffff; 
             box-shadow: 0 0 5px rgba(76, 175, 80, 0.3); 
         }
-        
-        /* 2. Radio Buttons - Button Style Container */
-        .radio-group { 
-            display: flex; 
-            flex-direction: row; 
-            flex-wrap: wrap; /* Allows wrapping if screen is tight */
-            justify-content: space-between; 
-            align-items: center;
+
+        /* Bordered Box for Buttons */
+        .radio-bordered-box {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 8px;
+            background-color: #fdfdfd;
+            display: flex;
             gap: 5px;
-            padding: 5px 0;
-            width: 100%;
         }
 
-        /* 3. Author & Type Button Styling */
+        /* Specific Layout for Author (Can wrap if needed) */
+        .author-box {
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        /* Specific Layout for Type (Single Line Forced) */
+        .type-box {
+            flex-wrap: nowrap; /* Single line forced */
+            justify-content: space-between;
+            overflow-x: auto; /* Scroll if screen too small, though flex-shrink handles it usually */
+        }
+
+        /* Radio Labels (Buttons) */
         .radio-label { 
             display: flex; 
             align-items: center; 
             justify-content: center;
-            font-size: 13px; 
+            font-size: 12px; /* Slightly smaller to fit single line */
             cursor: pointer; 
             margin: 0; 
             color: #333; 
-            background-color: #f1f1f1; /* Button background */
-            padding: 8px 10px;
+            background-color: #f1f1f1; 
+            padding: 8px 6px; /* Reduced padding for fit */
             border-radius: 6px;
             border: 1px solid #ddd;
-            flex-grow: 1; /* Make them fill space */
+            flex-grow: 1; 
+            white-space: nowrap; /* Text won't break */
             transition: background 0.2s;
         }
 
@@ -147,34 +159,29 @@
             background-color: #e0e0e0;
         }
 
-        /* 3. Square Tick Box Logic */
+        /* Square Tick Box Logic */
         .radio-label input { 
-            appearance: none; /* Remove default circle */
+            appearance: none; 
             -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
             border: 2px solid #2e7d32;
-            border-radius: 3px; /* Slightly rounded square */
-            margin-right: 8px;
+            border-radius: 3px; /* Square */
+            margin-right: 5px;
             background-color: white;
             cursor: pointer;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-shrink: 0;
         }
 
         /* Tick Fill Effect */
         .radio-label input:checked {
-            background-color: #2e7d32; /* Full fill color */
+            background-color: #2e7d32; 
             border-color: #2e7d32;
         }
 
-        /* Optional checkmark visual inside (if needed, but user asked for fill) */
-        .radio-label input:checked::after {
-            content: '✔';
-            color: white;
-            font-size: 11px;
+        /* Anydesk Red Text Styling */
+        .anydesk-text {
+            color: #d32f2f; /* Red Color */
             font-weight: bold;
         }
 
@@ -246,10 +253,8 @@
         .popup-content { background: #ffffff; padding: 30px; border-radius: 12px; text-align: center; width: 85%; max-width: 350px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 2px solid #4caf50; }
         .popup-content h3 { color: #4caf50; margin-top: 0; font-size: 20px; margin-bottom: 0; }
         .error-message { color: #ff5252; font-size: 13px; margin-top: 15px; margin-bottom: 15px; word-wrap: break-word; text-align: left; background: #ffebee; padding: 10px; border-radius: 6px; border: 1px solid #ffcdd2; display: none; }
-        
-        /* Removed Re-create button styling as it is no longer needed */
 
-        /* Universal Full Mobile Display */
+        /* Mobile Adjustments */
         @media (max-width: 768px) {
             body { padding: 0; }
             .form-container { 
@@ -261,8 +266,6 @@
                 border: none; 
                 padding: 15px 5vw; 
             }
-            .radio-group { padding: 5px 0; }
-            .radio-label { font-size: 12px; padding: 10px 5px; }
         }
     </style>
 </head>
@@ -325,7 +328,7 @@
 
         <div class="form-group">
             <label>Author <span class="required">*</span></label>
-            <div class="radio-group">
+            <div class="radio-bordered-box author-box">
                 <label class="radio-label"><input type="radio" name="author" value="Admin" required> Admin</label>
                 <label class="radio-label"><input type="radio" name="author" value="Irfan"> Irfan</label>
                 <label class="radio-label"><input type="radio" name="author" value="Farheen"> Farheen</label>
@@ -335,12 +338,12 @@
 
         <div class="form-group">
             <label>Type <span class="required">*</span></label>
-            <div class="radio-group">
+            <div class="radio-bordered-box type-box">
                 <label class="radio-label"><input type="radio" name="type" value="AMC" required> AMC</label>
                 <label class="radio-label"><input type="radio" name="type" value="Call"> Call</label>
                 <label class="radio-label"><input type="radio" name="type" value="Rental"> Rental</label>
                 <label class="radio-label"><input type="radio" name="type" value="Vendor"> Vendor</label>
-                <label class="radio-label"><input type="radio" name="type" value="Anydesk"> Anydesk</label>
+                <label class="radio-label"><input type="radio" name="type" value="Anydesk"> <span class="anydesk-text">Anydesk</span></label>
             </div>
         </div>
 
@@ -360,7 +363,7 @@
     <div class="popup-content">
         <h3 id="popup-title">Submitted Successfully</h3>
         <div id="error-details" class="error-message"></div>
-        </div>
+    </div>
 </div>
 
 <script>
@@ -445,7 +448,6 @@
             popup.querySelector('.popup-content').style.borderColor = "#4caf50";
             errorDetails.style.display = "none";
             
-            // 5. Logic: Wait 1 second, then reset form and close popup automatically
             setTimeout(() => {
                 form.reset();
                 popup.style.display = "none";
@@ -460,11 +462,9 @@
             errorDetails.style.display = "block";
             errorDetails.innerText = errorText;
             
-            // For error, we wait 3 seconds or user clicks outside (simple auto hide for now or refresh)
             submitBtn.innerText = "Submit";
             submitBtn.disabled = false;
             
-            // Auto close error after 3s so user can retry
             setTimeout(() => {
                 popup.style.display = "none";
             }, 3000);
